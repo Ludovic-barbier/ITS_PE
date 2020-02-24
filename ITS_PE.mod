@@ -1,7 +1,7 @@
 /*********************************************
  * OPL 12.9.0.0 Model
  * Author: ludov
- * Creation Date: 24 févr. 2020 at 10:51:33
+ * Creation Date: 24 fï¿½vr. 2020 at 10:51:33
  *********************************************/
  
 {int} Operator = ...; //j
@@ -44,6 +44,8 @@ constraints {
       
   forall(k in Competence)
     sum(j in Operator) HourlyWorkingTime[j][k] >= d[k]; // (II.4)(5)
+      
+  forall(i in )
       
   
 //  forall (j in Operator)
