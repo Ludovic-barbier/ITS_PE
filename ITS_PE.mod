@@ -1,7 +1,7 @@
 /*********************************************
  * OPL 12.9.0.0 Model
  * Author: ludov
- * Creation Date: 24 févr. 2020 at 10:51:33
+ * Creation Date: 24 fï¿½vr. 2020 at 10:51:33
  *********************************************/
  
  
@@ -39,6 +39,7 @@ int a[Operator]; //aj
 
 int d[Competence]; //dk
 
+int alpha[Competence];
 minimize totalTeam;
 constraints {
 
@@ -61,7 +62,16 @@ constraints {
   forall(k in Competence)
     sum(j in Operator) HourlyWorkingTime[j][k] >= d[k]; // (II.4)(5)
       
+  forall (i in )
+      
+<<<<<<< HEAD
+      
   
+=======
+  forall(j in Operator)
+    forall(k in Competence)
+      HourlyWorkingTime[j][k] >= alpha[k]*a[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
+>>>>>>> c7544add564966a34fea13beb4a1149ea08c8d63
 //  forall (j in Operator)
 //      forall (p in periods[i])
 //         alwaysIn(r[i], (p.start.hours * 60 + p.start.minutes) div timeStep,
