@@ -4,8 +4,23 @@
  * Creation Date: 24 févr. 2020 at 10:51:33
  *********************************************/
  
-{int} Operator = ...; //j
-{int} Competence = ...; //k
+ 
+ /*											DATA 					*/
+{int} Operator = ...; //  J operators
+{int} Competence = ...; // K competences
+
+//Competences
+int demand[Competence];	//The hourly demand of the competence
+
+//Operators
+int hourlyAvailability[Operator];	//The hourly availability of operator 
+
+//Others
+int minOperator[Competence];		// The minimum number of operators that has to be qualified on competence k
+int maxOperator[Competence];		// The maximum number of operators that has to be qualified on competence k
+
+
+
 int OperatorCompetenceMatrix[Operator][Competence] = ...; //xjk
 int HourlyWorkingTime[Operator][Competence] = ...; //tjk
 int nbOfCompetencesOwned[Operator] = ...; //oij
