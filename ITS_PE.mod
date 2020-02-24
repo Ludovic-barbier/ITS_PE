@@ -10,16 +10,17 @@
 {int} Competence = ...; // K competences
 
 //Competences
-int demand[Competence];	//The hourly demand of the competence
+int demand[Competence];	// (dk) The hourly demand of the competence
 
 //Operators
-int hourlyAvailability[Operator];	//The hourly availability of operator 
+int hourlyAvailability[Operator];	// (aj) The hourly availability of operator 
 
 //Others
-int minOperator[Competence];		// The minimum number of operators that has to be qualified on competence k
-int maxOperator[Competence];		// The maximum number of operators that has to be qualified on competence k
+int minOperator[Competence];		// (min_opk) The minimum number of operators that has to be qualified on competence k
+int maxOperator[Competence];		// (min_opj) The maximum number of operators that has to be qualified on competence k
 
-
+int minVersatility;	// The maximum number of competences an operator can possess
+int maxVersatility; // The minimum number of competences an operator can possess
 
 int OperatorCompetenceMatrix[Operator][Competence] = ...; //xjk
 int HourlyWorkingTime[Operator][Competence] = ...; //tjk
