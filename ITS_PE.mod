@@ -1,31 +1,32 @@
 /*********************************************
  * OPL 12.9.0.0 Model
  * Author: ludov
- * Creation Date: 24 févr. 2020 at 10:51:33
+ * Creation Date: 24 fï¿½vr. 2020 at 10:51:33
  *********************************************/
- 
- 
+
+
  /*											DATA 					*/
 {int} Operator = ...; //  J operators
 {int} Competence = ...; // K competences
 
 //Competences
-int demand[Competence];	// The hourly demand of the competence (dk)
+int demand[Competence];	// (dk) The hourly demand of the competence
 
 //Operators
-int hourlyAvailability[Operator];	// The hourly availability of operator (aj)
+int hourlyAvailability[Operator];	// (aj) The hourly availability of operator
 
 //Others
-int minOperator[Competence];		// The minimum number of operators that has to be qualified on competence k
-int maxOperator[Competence];		// The maximum number of operators that has to be qualified on competence k
+int minOperator[Competence];		// (min_opk) The minimum number of operators that has to be qualified on competence k
+int maxOperator[Competence];		// (min_opj) The maximum number of operators that has to be qualified on competence k
 
-
+int minVersatility;	// The maximum number of competences an operator can possess
+int maxVersatility; // The minimum number of competences an operator can possess
 
 int OperatorCompetenceMatrix[Operator][Competence] = ...; //xjk
 int HourlyWorkingTime[Operator][Competence] = ...; //tjk
 int nbOfCompetencesOwned[Operator] = ...; //oij
 
-int Team[Operator] = ...; // zj 
+int Team[Operator] = ...; // zj
 
 dexpr int totalTeam = sum(i in Operator) Team[i]; // Sum(zj)
 
@@ -37,31 +38,33 @@ constraints {
 
   forall(k in Competence)
      sum(j in Operator) OperatorCompetenceMatrix[j][k] >= minOperator[k]; // (II.4)(1)
-       
+
   forall(k in Competence)
      sum(j in Operator) OperatorCompetenceMatrix[j][k] <= maxOperator[k]; // (II.4)(2)
-       
-  forall(j in Operator)    
+
+  forall(j in Operator)
   	 forall(k in Competence)
   	   forall(k2 in Competence)
   	     if(c[k][k2] == 0) {
-  	     	OperatorCompetenceMatrix[j][k] + OperatorCompetenceMatrix[j][k2] <= 1;  	 //(II.4)(3)     
+  	     	OperatorCompetenceMatrix[j][k] + OperatorCompetenceMatrix[j][k2] <= 1;  	 //(II.4)(3)
   	     }
-  
+
   forall(j in Operator)
     sum(k in Competence) HourlyWorkingTime[j][k] <= hourlyAvailability[j]; // (II.4)(4)
-      
+
   forall(k in Competence)
     sum(j in Operator) HourlyWorkingTime[j][k] >= demand[k]; // (II.4)(5)
-      
+
   forall(j in Operator)
     forall(k in Competence)
       HourlyWorkingTime[j][k] >= alpha[k]*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
-      
+
+  forall (i in )
+
   forall(j in Operator)
     forall(k in Competence)
       HourlyWorkingTime[j][k] <= hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(7)
-  
+
   forall(j in Operator)
     sum(k in Competence)
 //  forall (j in Operator)
