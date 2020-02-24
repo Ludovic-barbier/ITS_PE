@@ -10,10 +10,10 @@
 {int} Competence = ...; // K competences
 
 //Competences
-int demand[Competence];	//The hourly demand of the competence
+int demand[Competence];	// The hourly demand of the competence (dk)
 
 //Operators
-int hourlyAvailability[Operator];	//The hourly availability of operator 
+int hourlyAvailability[Operator];	// The hourly availability of operator (aj)
 
 //Others
 int minOperator[Competence];		// The minimum number of operators that has to be qualified on competence k
@@ -29,24 +29,17 @@ int Team[Operator] = ...; // zj
 
 dexpr int totalTeam = sum(i in Operator) Team[i]; // Sum(zj)
 
-int min_op[Competence]; //min_opk
-int max_op[Competence]; //max_opk
-
 int c[Competence][Competence]; //ckk'
-
-int a[Operator]; //aj
-
-int d[Competence]; //dk
 
 int alpha[Competence];
 minimize totalTeam;
 constraints {
 
   forall(k in Competence)
-     sum(j in Operator) OperatorCompetenceMatrix[j][k] >= min_op[k]; // (II.4)(1)
+     sum(j in Operator) OperatorCompetenceMatrix[j][k] >= minOperator[k]; // (II.4)(1)
        
   forall(k in Competence)
-     sum(j in Operator) OperatorCompetenceMatrix[j][k] <= max_op[k]; // (II.4)(2)
+     sum(j in Operator) OperatorCompetenceMatrix[j][k] <= maxOperator[k]; // (II.4)(2)
        
   forall(j in Operator)    
   	 forall(k in Competence)
@@ -56,14 +49,21 @@ constraints {
   	     }
   
   forall(j in Operator)
-    sum(k in Competence) HourlyWorkingTime[j][k] <= a[j]; // (II.4)(4)
+    sum(k in Competence) HourlyWorkingTime[j][k] <= hourlyAvailability[j]; // (II.4)(4)
       
   forall(k in Competence)
-    sum(j in Operator) HourlyWorkingTime[j][k] >= d[k]; // (II.4)(5)
+    sum(j in Operator) HourlyWorkingTime[j][k] >= demand[k]; // (II.4)(5)
       
   forall(j in Operator)
     forall(k in Competence)
-      HourlyWorkingTime[j][k] >= alpha[k]*a[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
+      HourlyWorkingTime[j][k] >= alpha[k]*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
+      
+  forall(j in Operator)
+    forall(k in Competence)
+      HourlyWorkingTime[j][k] <= hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(7)
+  
+  forall(j in Operator)
+    sum(k in Competence)
 //  forall (j in Operator)
 //      forall (p in periods[i])
 //         alwaysIn(r[i], (p.start.hours * 60 + p.start.minutes) div timeStep,
