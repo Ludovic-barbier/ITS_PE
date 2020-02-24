@@ -4,23 +4,31 @@
  * Creation Date: 24 févr. 2020 at 10:51:33
  *********************************************/
  
-{int} Operator = ...;
-{int} Competence = ...;
-int OperatorCompetenceMatrix[Operator][Competence] = ...;
-int HourlyWorkingTime[Operator][Competence] = ...;
-{int} OperatorIsIncluded = ...;
-int nbOfCompetencesOwned[Operator] = ...;
+{int} Operator = ...; //j
+{int} Competence = ...; //k
+int OperatorCompetenceMatrix[Operator][Competence] = ...; //xjk
+int HourlyWorkingTime[Operator][Competence] = ...; //tjk
+int nbOfCompetencesOwned[Operator] = ...; //oij
 
-int Team[Operator] = ...;
+int Team[Operator] = ...; // zj 
 
-dexpr int totalTeam = sum(i in Operator) Team[i];
+dexpr int totalTeam = sum(i in Operator) Team[i]; // Sum(zj)
+
+int min_opk; //min_opk
+int max_opk; //max_opk
 
 minimize totalTeam;
 constraints {
 
+  forall(k in Competence)
+     sum(j in Operator) OperatorCompetenceMatrix[j][k] >= min_opk; // (II.4)(1)
   // the capacity rate is adapted to intervals of 10 minutes;
   // the time scale of a resource is divided by the time step
-  forall (i in SectorNames)
+  forall(k in Competence)
+     sum(j in Operator) OperatorCompetenceMatrix[j][k] <= max_opk; // (II.4)(2)
+       
+       
+  forall (j in Operator)
       forall (p in periods[i])
          alwaysIn(r[i], (p.start.hours * 60 + p.start.minutes) div timeStep,
                         (p.end.hours * 60 + p.end.minutes) div timeStep,
