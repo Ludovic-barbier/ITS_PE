@@ -21,17 +21,24 @@ int maxOperator[Competence];		// (min_opj) The maximum number of operators that 
 
 int minVersatility;	// The maximum number of competences an operator can possess
 int maxVersatility; // The minimum number of competences an operator can possess
+float ratioSkills[0..maxVersatility];	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
 
-{int} nbOfCompetencesPerPerson;
+int compatibility[Competence][Competence]; //(ckk') Say if the competence k and k' can be associated
+
+float timeRatio[Competence]; //(alpha k) Ratio of time an operator has to spend on competence k
+
+
+/*											VARIABLES							*/
 int OperatorCompetenceMatrix[Operator][Competence] = ...; //xjk
 int HourlyWorkingTime[Operator][Competence] = ...; //tjk
-int nbOfCompetencesOwned[Operator] = ...; //oij
-
 int Team[Operator] = ...; // zj
+int nbOfCompetencesOwned[0..maxVersatility][Operator] = ...; //oij
+int nbOfMinCompetencesNeeded[0..maxVersatility] = ...; //Nimin
+int nbOfMaxCompetencesNeeded[0..maxVersatility] = ...; //Nimax
 
-dexpr int totalTeam = sum(i in Operator) Team[i]; // Sum(zj)
+dexpr int totalTeam = sum(j in Operator) Team[j]; // Sum(zj)
 
-int c[Competence][Competence]; //ckk'
+
 
 int alpha[Competence];
 minimize totalTeam;
@@ -46,7 +53,7 @@ constraints {
   forall(j in Operator)
   	 forall(k in Competence)
   	   forall(k2 in Competence)
-  	     if(c[k][k2] == 0) {
+  	     if(compatibility[k][k2] == 0) {
   	     	OperatorCompetenceMatrix[j][k] + OperatorCompetenceMatrix[j][k2] <= 1;  	 //(II.4)(3)
   	     }
 
@@ -71,40 +78,39 @@ constraints {
     sum(k in Competence) OperatorCompetenceMatrix[j][k] <= Team[j] * maxVersatility; // (II.4)(9)
       
   forall(j in Operator)
-    sum(i in minVersatility..maxVersatility) nbOfCompetencesOwned[j]<=1; // (II.4)(10)
+    sum(i in minVersatility..maxVersatility) nbOfCompetencesOwned[i][j]<=1; // (II.4)(10)
       
   forall(j in Operator)
-    sum(i in minVersatility..maxVersatility) nbOfCompetencesOwned[j] >= Team[j]; // (II.4)(11)
+    sum(i in minVersatility..maxVersatility) nbOfCompetencesOwned[i][j] >= Team[j]; // (II.4)(11)
+  
+  forall(i in 0..maxVersatility)
+    forall(j in Operator)
+      sum(k in Competence) OperatorCompetenceMatrix[j][k] >= i*nbOfCompetencesOwned[i][j]; // (II.4)(12)
+  
+  forall(i in 0..maxVersatility)
+    forall(j in Operator)
+      maxVersatility*(1-Team[j])+i-sum(k in Competence)OperatorCompetenceMatrix[j][k] >= maxVersatility*(1-nbOfCompetencesOwned[i][j]); // (II.4)(13)
+  
+  forall(j in Operator)
+  	1-Team[j] <= nbOfCompetencesOwned[0][j]; // (II.4)(14)
   
   forall(i in minVersatility..maxVersatility)
-    forall(j in Operator)
-      sum(k in Competence) OperatorCompetenceMatrix[j][k] >= i*nbOfCompetencesOwned[j]; // (II.4)(12)
+    nbOfMinCompetencesNeeded[i] <= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(15)
   
   forall(i in minVersatility..maxVersatility)
-    forall(j in Operator)
-      maxVersatility*(1-Team[j])+i-sum(k in Competence)OperatorCompetenceMatrix[j][k] >= maxVersatility*(1-nbOfCompetencesOwned[j]); // (II.4)(13)
+    nbOfMinCompetencesNeeded[i] > ratioSkills[i] * sum(j in Operator) Team[j] - 1; // (II.4)(16)
   
-  if(nbOfCompetencesPerPerson == 0)
-  {
-  	forall(j in Operator)
-  	  1-Team[j] <= nbOfCompetencesOwned[j]; // (II.4)(14)
-  }
-//  forall (j in Operator)
-//      forall (p in periods[i])
-//         alwaysIn(r[i], (p.start.hours * 60 + p.start.minutes) div timeStep,
-//                        (p.end.hours * 60 + p.end.minutes) div timeStep,
-//                           0,
-//                        (p.rate * timeStep + 59) div 60);
-//
-//
-//   // a flight enters a sector at its expected time-over plus its delay;
-//   // since the time scale of a resource is divided by the time step,
-//   // we do the same for the start time of the activity
-//   forall (i in Enters)
-//      startOf(a[i]) == (delay[e[i].flight] + e[i].eto.hours * 60 + e[i].eto.minutes) div timeStep;
-//
-//   forall(i in SectorNames)
-//     r[i] <= nbOfFlights;
+  forall(i in minVersatility..maxVersatility)
+    nbOfMaxCompetencesNeeded[i] >= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(17)
+  
+  forall(i in minVersatility..maxVersatility)
+    nbOfMaxCompetencesNeeded[i] < ratioSkills[i] * sum(j in Operator) Team[j] + 1; // (II.4)(18)
+  
+  forall(i in minVersatility..maxVersatility)
+     sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
+                                                          
+  forall(i in minVersatility..maxVersatility)
+    sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20)
 }
 
 execute {
