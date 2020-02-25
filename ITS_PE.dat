@@ -4,5 +4,24 @@
  * Creation Date: 24 févr. 2020 at 10:51:33
  *********************************************/
 
- nbOfSkills = 4;
- 
+Operator = {0,1,2,3,4};
+Competence = {0,1,2,3,4,5};
+
+//Competence
+demand = [7,2,1,3,2,5];
+
+//Operators
+hourlyAvailability = [7,7,7,7,4];
+
+//Others
+minOperator = [2,2,1,1,1,3];
+maxOperator = [3,3,2,2,2,4];
+
+minVersatility = 1;
+maxVersatility = 3;
+
+ratioSkills = [0,0.2,0.6,0.2];
+
+compatibility = [[1,0,1,0,1,0],[0,1,1,1,1,0],[1,1,1,0,1,1],[0,1,0,1,0,0],[1,1,1,0,1,1],[0,0,1,0,1,1]];
+
+timeRatio = [];
