@@ -10,22 +10,22 @@ using CP;
 {int} Competence = ...; // K competences
 
 //Competences
-int demand[Competence];	// (dk) The hourly demand of the competence
+int demand[Competence] = ...;	// (dk) The hourly demand of the competence
 
 //Operators
-int hourlyAvailability[Operator];	// (aj) The hourly availability of operator
+int hourlyAvailability[Operator] = ...;	// (aj) The hourly availability of operator
 
 //Others
-int minOperator[Competence];		// (min_opk) The minimum number of operators that has to be qualified on competence k
-int maxOperator[Competence];		// (min_opj) The maximum number of operators that has to be qualified on competence k
+int minOperator[Competence] = ...;		// (min_opk) The minimum number of operators that has to be qualified on competence k
+int maxOperator[Competence] = ...;		// (min_opj) The maximum number of operators that has to be qualified on competence k
 
-int minVersatility;	// The maximum number of competences an operator can possess
-int maxVersatility; // The minimum number of competences an operator can possess
-float ratioSkills[0..maxVersatility];	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
+int minVersatility = ...;	// The maximum number of competences an operator can possess
+int maxVersatility = ...; // The minimum number of competences an operator can possess
+float ratioSkills[0..maxVersatility] = ...;	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
 
-int compatibility[Competence][Competence]; //(ckk') Say if the competence k and k' can be associated
+int compatibility[Competence][Competence] = ...; //(ckk') Say if the competence k and k' can be associated
 
-float timeRatio[Competence]; //(alpha k) Ratio of time an operator has to spend on competence k
+float timeRatio[Competence] = ...; //(alpha k) Ratio of time an operator has to spend on competence k
 
 
 /*											VARIABLES							*/
