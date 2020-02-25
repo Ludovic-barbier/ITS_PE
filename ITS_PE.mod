@@ -29,12 +29,12 @@ float timeRatio[Competence] = ...; //(alpha k) Ratio of time an operator has to 
 
 
 /*											VARIABLES							*/
-int OperatorCompetenceMatrix[Operator][Competence] = ...; //xjk
-int HourlyWorkingTime[Operator][Competence] = ...; //tjk
+dvar int OperatorCompetenceMatrix[Operator][Competence]; //xjk
+dvar int HourlyWorkingTime[Operator][Competence]; //tjk
 dvar int Team[Operator]; // zj
-int nbOfCompetencesOwned[0..maxVersatility][Operator] = ...; //oij
-int nbOfMinCompetencesNeeded[0..maxVersatility] = ...; //Nimin
-int nbOfMaxCompetencesNeeded[0..maxVersatility] = ...; //Nimax
+dvar int nbOfCompetencesOwned[0..maxVersatility][Operator]; //oij
+dvar int nbOfMinCompetencesNeeded[0..maxVersatility]; //Nimin
+dvar int nbOfMaxCompetencesNeeded[0..maxVersatility]; //Nimax
 
 dexpr int totalTeam = sum(j in Operator) Team[j]; // Sum(zj)
 
