@@ -3,7 +3,7 @@
  * Author: ludov
  * Creation Date: 24 f�vr. 2020 at 10:51:33
  *********************************************/
-
+using CP;
 
  /*											DATA 					*/
 {int} Operator = ...; //  J operators
@@ -98,13 +98,13 @@ constraints {
     nbOfMinCompetencesNeeded[i] <= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(15)
   
   forall(i in minVersatility..maxVersatility)
-    nbOfMinCompetencesNeeded[i] > ratioSkills[i] * sum(j in Operator) Team[j] - 1; // (II.4)(16)
+    nbOfMinCompetencesNeeded[i] > ftoi(ratioSkills[i] * (sum(j in Operator) Team[j]) - 1); // (II.4)(16)
   
   forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] >= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(17)
   
   forall(i in minVersatility..maxVersatility)
-    nbOfMaxCompetencesNeeded[i] < ratioSkills[i] * sum(j in Operator) Team[j] + 1; // (II.4)(18)
+    nbOfMaxCompetencesNeeded[i] < ftoi(ratioSkills[i] * sum(j in Operator) Team[j] + 1); // (II.4)(18)
   
   forall(i in minVersatility..maxVersatility)
      sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
