@@ -31,16 +31,13 @@ float timeRatio[Competence]; //(alpha k) Ratio of time an operator has to spend 
 /*											VARIABLES							*/
 int OperatorCompetenceMatrix[Operator][Competence] = ...; //xjk
 int HourlyWorkingTime[Operator][Competence] = ...; //tjk
-int Team[Operator] = ...; // zj
+dvar int Team[Operator]; // zj
 int nbOfCompetencesOwned[0..maxVersatility][Operator] = ...; //oij
 int nbOfMinCompetencesNeeded[0..maxVersatility] = ...; //Nimin
 int nbOfMaxCompetencesNeeded[0..maxVersatility] = ...; //Nimax
 
 dexpr int totalTeam = sum(j in Operator) Team[j]; // Sum(zj)
 
-
-
-int alpha[Competence];
 minimize totalTeam;
 constraints {
 
@@ -65,7 +62,7 @@ constraints {
 
   forall(j in Operator)
     forall(k in Competence)
-      HourlyWorkingTime[j][k] >= alpha[k]*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
+      HourlyWorkingTime[j][k] >= timeRatio[k]*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
 
   forall(j in Operator)
     forall(k in Competence)
@@ -98,13 +95,13 @@ constraints {
     nbOfMinCompetencesNeeded[i] <= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(15)
   
   forall(i in minVersatility..maxVersatility)
-    nbOfMinCompetencesNeeded[i] > ftoi(ratioSkills[i] * (sum(j in Operator) Team[j]) - 1); // (II.4)(16)
+    nbOfMinCompetencesNeeded[i] > ratioSkills[i] * (sum(j in Operator) Team[j]) - 1; // (II.4)(16)
   
   forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] >= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(17)
   
   forall(i in minVersatility..maxVersatility)
-    nbOfMaxCompetencesNeeded[i] < ftoi(ratioSkills[i] * sum(j in Operator) Team[j] + 1); // (II.4)(18)
+    nbOfMaxCompetencesNeeded[i] < ratioSkills[i] * sum(j in Operator) Team[j] + 1; // (II.4)(18)
   
   forall(i in minVersatility..maxVersatility)
      sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
