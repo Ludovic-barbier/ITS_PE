@@ -1,27 +1,27 @@
 /*********************************************
  * OPL 12.9.0.0 Data
- * Author: ludov
- * Creation Date: 24 févr. 2020 at 10:51:33
+ * Author: 
+ * Creation Date: 24 fï¿½vr. 2020 at 10:51:33
  *********************************************/
 
 Operator = {0,1,2,3,4};
-Competence = {0,1,2,3,4,5};
+Competence = {0,1,2,3,4};
 
 //Competence
-demand = [1,1,1,1,1,1];
+demand = [10,10,10,10,10];
 
 //Operators
-hourlyAvailability = [7,7,7,7,7];
+hourlyAvailability = [25,25,25,25,25];
 
 //Others
-minOperator = [1,1,1,1,1,1];
-maxOperator = [5,5,5,5,5,5];
+minOperator = [1,1,1,1,1];
+maxOperator = [5,5,5,5,5];
 
 minVersatility = 0;
-maxVersatility = 3;
+maxVersatility = 5;
 
-ratioSkills = [0.2,0.2,0.4,0.2];
+//ratioSkills = [0,1];
 
-compatibility = [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]];
+compatibility = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
 
-timeRatio = [0,0,0,0,0,0];
+timeRatio = [0,0,0,0,0];
