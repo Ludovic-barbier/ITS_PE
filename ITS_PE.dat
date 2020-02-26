@@ -8,7 +8,7 @@ Operator = {0,1,2,3,4};
 Competence = {0,1,2,3,4,5};
 
 //Competence
-demand = [4,5,2,1,1,6];
+demand = [1,1,1,1,1,1];
 
 //Operators
 hourlyAvailability = [7,7,7,7,7];

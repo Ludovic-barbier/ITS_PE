@@ -33,8 +33,8 @@ dvar boolean OperatorCompetenceMatrix[Operator][Competence]; //xjk
 dvar int HourlyWorkingTime[Operator][Competence]; //tjk
 dvar boolean Team[Operator]; // zj
 dvar boolean nbOfCompetencesOwned[0..maxVersatility][Operator]; //oij
-dvar int nbOfMinCompetencesNeeded[0..maxVersatility]; //Nimin
-dvar int nbOfMaxCompetencesNeeded[0..maxVersatility]; //Nimax
+dvar int nbOfMinCompetencesNeeded[minVersatility..maxVersatility]; //Nimin
+dvar int nbOfMaxCompetencesNeeded[minVersatility..maxVersatility]; //Nimax
 
 dexpr int totalTeam = sum(j in Operator) Team[j]; // Sum(zj)
 
@@ -73,7 +73,7 @@ constraints {
   
   forall(j in Operator)
     sum(k in Competence) OperatorCompetenceMatrix[j][k] <= Team[j] * maxVersatility; // (II.4)(9)
-     
+      
   forall(j in Operator)
     sum(i in 0..maxVersatility) nbOfCompetencesOwned[i][j] <= 1; // (II.4)(10)
       
@@ -83,33 +83,33 @@ constraints {
   forall(i in 0..maxVersatility)
     forall(j in Operator)
       sum(k in Competence) OperatorCompetenceMatrix[j][k] >= i*nbOfCompetencesOwned[i][j]; // (II.4)(12)
-  
+  /*
   forall(i in 0..maxVersatility)
     forall(j in Operator)
       maxVersatility*(1-Team[j])+i-sum(k in Competence)OperatorCompetenceMatrix[j][k] >= maxVersatility*(1-nbOfCompetencesOwned[i][j]); // (II.4)(13)
-  
+  */
   forall(j in Operator)
   	1-Team[j] <= nbOfCompetencesOwned[0][j]; // (II.4)(14)
   
-  forall(i in 0..maxVersatility)
+  forall(i in minVersatility..maxVersatility)
     nbOfMinCompetencesNeeded[i] <= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(15)
   
-  forall(i in 0..maxVersatility)
+  forall(i in minVersatility..maxVersatility)
     nbOfMinCompetencesNeeded[i] > ratioSkills[i] * (sum(j in Operator) Team[j]) - 1; // (II.4)(16)
   
-  forall(i in 0..maxVersatility)
+  forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] >= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(17)
   
-  forall(i in 0..maxVersatility)
+  forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] < ratioSkills[i] * sum(j in Operator) Team[j] + 1; // (II.4)(18)
   
-  forall(i in 0..maxVersatility)
+  forall(i in minVersatility..maxVersatility)
      sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
                                                           
-  forall(i in 0..maxVersatility)
+  forall(i in minVersatility..maxVersatility)
     sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20) 
 }
-
+/*
 execute {
   writeln("Member in team = " + totalTeam);
-}
+}*/
