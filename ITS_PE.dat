@@ -17,10 +17,10 @@ hourlyAvailability = [7,7,7,7,7];
 minOperator = [1,1,1,1,1,1];
 maxOperator = [5,5,5,5,5,5];
 
-minVersatility = 1;
+minVersatility = 0;
 maxVersatility = 3;
 
-ratioSkills = [0,0.2,0.6,0.2];
+ratioSkills = [0.2,0.2,0.4,0.2];
 
 compatibility = [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]];
 
