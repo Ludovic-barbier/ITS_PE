@@ -8,12 +8,11 @@ using CP;
  /*											DATA 					*/
 {int} Operator = ...; //  J operators
 {int} Competence = ...; // K competences
-
 //Competences
-int demand[Competence] = ...;	// (dk) The hourly demand of the competence
+float demand[Competence] = ...;	// (dk) The hourly demand of the competence
 
 //Operators
-int hourlyAvailability[Operator] = ...;	// (aj) The hourly availability of operator
+float hourlyAvailability[Operator] = ...;	// (aj) The hourly availability of operator
 
 //Others
 int minOperator[Competence] = ...;		// (min_opk) The minimum number of operators that has to be qualified on competence k
@@ -25,7 +24,7 @@ float ratioSkills[0..maxVersatility] = ...;	// (vi) The ratio of operators with 
 
 int compatibility[Competence][Competence] = ...; //(ckk') Say if the competence k and k' can be associated
 
-float timeRatio[Competence] = ...; //(alpha k) Ratio of time an operator has to spend on competence k
+float timeRatio = ...; //(alpha k) Ratio of time an operator has to spend on competence k
 
 
 /*											VARIABLES							*/
@@ -62,7 +61,7 @@ constraints {
 
   forall(j in Operator)
     forall(k in Competence)
-      HourlyWorkingTime[j][k] >= timeRatio[k]*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
+      HourlyWorkingTime[j][k] >= timeRatio*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
 
   forall(j in Operator)
     forall(k in Competence)
