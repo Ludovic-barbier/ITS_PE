@@ -77,3 +77,5 @@ def min_op_max_op(tab_competence):
     np.savetxt('max_op.csv', list_min_op, delimiter=';')
 
 workload_per_competences(competences_from_area('AREA 8'))
+creation_association_rule_area(competences_from_area('AREA 8'))
+min_op_max_op(competences_from_area('AREA 8'))
