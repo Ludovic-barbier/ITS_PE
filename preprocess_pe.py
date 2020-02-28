@@ -64,7 +64,7 @@ def workload_per_competences(tab_competence):
     for i in range(len(tab_competence)):
         for j in range(data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].size):
             workload[i] = workload[i] + data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].values[0]
-    np.savetxt('workload.csv', workload, delimiter=';')
+    np.savetxt('workload.csv', workload, delimiter=';', fmt='%.2f')
 
 def min_op_max_op(tab_competence):
     data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\Interval_duplication_competency.csv', sep=';')
@@ -76,4 +76,4 @@ def min_op_max_op(tab_competence):
     np.savetxt('min_op.csv', list_min_op, delimiter=';')
     np.savetxt('max_op.csv', list_min_op, delimiter=';')
 
-creation_association_rule_area(competences_from_area('AREA 8'))
+workload_per_competences(competences_from_area('AREA 8'))
