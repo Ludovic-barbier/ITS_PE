@@ -24,17 +24,38 @@ def extract_association_rule(competency1, competency2, data):
     else:
         return False
 
+def extract_area(zone):
+    data = pd.read_csv('D:\Ludovic\Ecole ISMIN 3A\PE\Données Projet ST - EMSE Projet Etudiant\set 1\zone_area.csv', sep=";")
+    return(data[data['ZONE']==zone]['AREA'].values)
+
+def competences_from_zone(zone):
+    data = pd.read_csv('D:\Ludovic\Ecole ISMIN 3A\PE\Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
+    areas = extract_area(zone)
+    competences = []
+    for i in areas:
+        for j in range(data[data['AREA']==i]['COMPETENCY'].size):
+            if data[data['AREA']==i]['COMPETENCY'].values[j] not in competences:
+                competences.append(data[data['AREA']==i]['COMPETENCY'].values[j])
+    return(competences)
+
+def competences_from_area(area):
+    data = pd.read_csv('D:\Ludovic\Ecole ISMIN 3A\PE\Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
+    competences = []
+    for j in range(data[data['AREA']==area]['COMPETENCY'].size):
+        if data[data['AREA']==area]['COMPETENCY'].values[j] not in competences:
+            competences.append(data[data['AREA']==area]['COMPETENCY'].values[j])
+    return(competences)
+
 def creation_association_rule_area(tab_competence):
-  file_to_read = pd.read_csv('Association_Rule.csv', sep=';')
-  tab_res_association_rule = np.zeros((len(tab_competence)+1, len(tab_competence)+1))
+  file_to_read = pd.read_csv('D:\Ludovic\Ecole ISMIN 3A\PE\Données Projet ST - EMSE Projet Etudiant\set 1\Association_Rule.csv', sep=';')
+  tab_res_association_rule = np.zeros((len(tab_competence), len(tab_competence)), dtype=np.int8)
   for i in range(len(tab_competence)):
     #tab_res_association_rule[i+1][0] = extract_int(tab_competence[i])[0]
     for j in range(len(tab_competence)):
       #tab_res_association_rule[0][j+1] = extract_int(tab_competence[j])[0]
       if(extract_int(tab_competence[j])[0] <= extract_int(tab_competence[i])[0]):
-        tab_res_association_rule[i+1][j+1] = extract_association_rule(tab_competence[i], tab_competence[j], file_to_read)
-        tab_res_association_rule[j+1][i+1] = tab_res_association_rule[i+1][j+1]
-  print(tab_res_association_rule)
+        tab_res_association_rule[i][j] = extract_association_rule(tab_competence[i], tab_competence[j], file_to_read)
+        tab_res_association_rule[j][i] = tab_res_association_rule[i][j]
   np.savetxt('res.csv', tab_res_association_rule, delimiter=';')
 
-creation_association_rule_area(['LOCALTEST 1', 'LOCALTEST 5'])
+creation_association_rule_area(competences_from_area('AREA 8'))
