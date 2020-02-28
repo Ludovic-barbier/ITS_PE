@@ -58,4 +58,14 @@ def creation_association_rule_area(tab_competence):
         tab_res_association_rule[j][i] = tab_res_association_rule[i][j]
   np.savetxt('res.csv', tab_res_association_rule, delimiter=';')
 
+def min_op_max_op(tab_competence):
+    data = pd.read_csv('D:\Ludovic\Ecole ISMIN 3A\PE\Données Projet ST - EMSE Projet Etudiant\set 1\Interval_duplication_competency.csv', sep=';')
+    list_min_op = np.zeros(len(tab_competence))
+    list_max_op = np.zeros(len(tab_competence))
+    for i in range(len(tab_competence)):
+        list_min_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MIN DUPLICATION'].values[0]
+        list_max_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MAX DUPLICATION'].values[0]
+    np.savetxt('min_op.csv', list_min_op, delimiter=';')
+    np.savetxt('max_op.csv', list_min_op, delimiter=';')
+
 creation_association_rule_area(competences_from_area('AREA 8'))
