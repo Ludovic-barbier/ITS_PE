@@ -58,8 +58,16 @@ def creation_association_rule_area(tab_competence):
         tab_res_association_rule[j][i] = tab_res_association_rule[i][j]
   np.savetxt('res.csv', tab_res_association_rule, delimiter=';')
 
+def workload_per_competences(tab_competence):
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
+    workload = np.zeros(len(tab_competence))
+    for i in range(len(tab_competence)):
+        for j in range(data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].size):
+            workload[i] = workload[i] + data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].values[0]
+    np.savetxt('workload.csv', workload, delimiter=';')
+
 def min_op_max_op(tab_competence):
-    data = pd.read_csv('D:\Ludovic\Ecole ISMIN 3A\PE\Données Projet ST - EMSE Projet Etudiant\set 1\Interval_duplication_competency.csv', sep=';')
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\Interval_duplication_competency.csv', sep=';')
     list_min_op = np.zeros(len(tab_competence))
     list_max_op = np.zeros(len(tab_competence))
     for i in range(len(tab_competence)):
