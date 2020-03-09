@@ -37,15 +37,6 @@ dvar int nbOfMaxCompetencesNeeded[0..maxVersatility]; //Nimax
 
 dexpr int totalTeam = sum(j in Operator) Team[j]; // Sum(zj)
 
-    execute
-    {
-    writeln("demand = ",demand);
-    writeln("minOperator = ",minOperator);
-    writeln("maxOperator = ",maxOperator);
-    writeln("compatibility = ",compatibility);
-    }
-
-
 minimize totalTeam;
 constraints {
 
@@ -75,17 +66,13 @@ constraints {
   forall(j in Operator)
     forall(k in Competence)
       HourlyWorkingTime[j][k] <= hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(7)
-     
-     
-        
-  forall(j in Operator)
-    sum(k in Competence) OperatorCompetenceMatrix[j][k] >= Team[j] * minVersatility; // (II.4)(8)
-      
 	
   forall(j in Operator)
+    sum(k in Competence) OperatorCompetenceMatrix[j][k] >= Team[j] * minVersatility; // (II.4)(8)
+  
+  forall(j in Operator)
     sum(k in Competence) OperatorCompetenceMatrix[j][k] <= Team[j] * maxVersatility; // (II.4)(9)
-    
-
+      
   forall(j in Operator)
     sum(i in 0..maxVersatility) nbOfCompetencesOwned[i][j] <= 1; // (II.4)(10)
       
@@ -95,14 +82,11 @@ constraints {
   forall(i in 0..maxVersatility)
     forall(j in Operator)
       sum(k in Competence) OperatorCompetenceMatrix[j][k] >= i*nbOfCompetencesOwned[i][j]; // (II.4)(12)
-    
   /*
   forall(i in 0..maxVersatility)
     forall(j in Operator)
       maxVersatility*(1-Team[j])+i-sum(k in Competence)OperatorCompetenceMatrix[j][k] >= maxVersatility*(1-nbOfCompetencesOwned[i][j]); // (II.4)(13)
   */
-  
-  
   forall(j in Operator)
   	1-Team[j] <= nbOfCompetencesOwned[0][j]; // (II.4)(14)
   
@@ -118,6 +102,13 @@ constraints {
   forall(i in 0..maxVersatility)
     nbOfMaxCompetencesNeeded[i] < ratioSkills[i] * sum(j in Operator) Team[j] + 1; // (II.4)(18)
   
-}  
-
-
+  forall(i in 0..maxVersatility)
+     sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
+                                                          
+  forall(i in 0..maxVersatility)
+    sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20) 
+}
+/*
+execute {
+  writeln("Member in team = " + totalTeam);
+}*/
