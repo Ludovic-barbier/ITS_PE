@@ -118,6 +118,9 @@ constraints {
   forall(i in 0..maxVersatility)
     nbOfMaxCompetencesNeeded[i] < ratioSkills[i] * sum(j in Operator) Team[j] + 1; // (II.4)(18)
   
-}  
-
-
+  forall(i in 0..maxVersatility)
+     sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
+                                                          
+  forall(i in 0..maxVersatility)
+    sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20) 
+}
