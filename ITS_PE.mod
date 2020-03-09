@@ -24,7 +24,7 @@ int maxVersatility = ...; // The minimum number of competences an operator can p
 
 int compatibility[Competence][Competence] = ...; //(ckk') Say if the competence k and k' can be associated
 
-float timeRatio[Competence] = ...; //(alpha k) Ratio of time an operator has to spend on competence k
+float timeRatio = ...; //(alpha k) Ratio of time an operator has to spend on competence k
 
 
 /*											VARIABLES							*/
@@ -63,7 +63,7 @@ constraints {
 
   forall(j in Operator)
     forall(k in Competence)
-      HourlyWorkingTime[j][k] >= timeRatio[k]*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
+      HourlyWorkingTime[j][k] >= timeRatio*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
 
   forall(j in Operator)
     forall(k in Competence)

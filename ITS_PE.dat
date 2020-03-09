@@ -32,5 +32,5 @@ maxVersatility = 10;
 
 compatibility from SheetRead(res,"'res'!A1:L12");
 
-timeRatio = [0,0,0,0,0,0,0,0,0,0,0,0];
+timeRatio = 0;
 
