@@ -27,6 +27,11 @@ int compatibility[Competence][Competence] = ...; //(ckk') Say if the competence 
 float timeRatio = ...; //(alpha k) Ratio of time an operator has to spend on competence k
 
 
+/*											Données intéressantes à afficher pour la suitee						*/
+int nbCompetencesPerOperator[Operator];
+float ratioSkills[0..maxVersatility];	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
+
+
 /*											VARIABLES							*/
 dvar boolean OperatorCompetenceMatrix[Operator][Competence]; //xjk
 dvar int HourlyWorkingTime[Operator][Competence]; //tjk
@@ -119,5 +124,20 @@ constraints {
 }
 
 execute {
-  writeln("Member in team = " + totalTeam);
+	  for (var j = 0;j < 15;j++){
+	    for (var k = 0;k < 12;k++){
+	      nbCompetencesPerOperator[j] += OperatorCompetenceMatrix[j][k];
+	    }
+	  }
+	  for (var j = 0;j < 15;j++){
+	      ratioSkills[nbCompetencesPerOperator[j]] += 1;
+	  }
+	  for (var i = 0;i <= 10;i++){
+	      ratioSkills[i] = ratioSkills[i]/totalTeam;
+	  }
+	/*writeln('Nombre de Competences par operateur',nbCompetencesPerOperator);
+	writeln('Ratio des membres de lequipe', ratioSkills);
+	*/
+	writeln("Member in team = " + totalTeam);
 }
+
