@@ -74,7 +74,7 @@ def min_op_max_op(tab_competence):
         list_min_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MIN DUPLICATION'].values[0]
         list_max_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MAX DUPLICATION'].values[0]
     np.savetxt('min_op.csv', list_min_op, delimiter=';')
-    np.savetxt('max_op.csv', list_min_op, delimiter=';')
+    np.savetxt('max_op.csv', list_max_op, delimiter=';')
 
 workload_per_competences(competences_from_area('AREA 8'))
 creation_association_rule_area(competences_from_area('AREA 8'))

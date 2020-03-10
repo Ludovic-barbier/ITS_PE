@@ -20,20 +20,26 @@ int maxOperator[Competence] = ...;		// (min_opj) The maximum number of operators
 
 int minVersatility = ...;	// The maximum number of competences an operator can possess
 int maxVersatility = ...; // The minimum number of competences an operator can possess
-float ratioSkills[0..maxVersatility] = ...;	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
 
 int compatibility[Competence][Competence] = ...; //(ckk') Say if the competence k and k' can be associated
 
 float timeRatio = ...; //(alpha k) Ratio of time an operator has to spend on competence k
 
 
+/*											Donn�es int�ressantes � afficher pour la suitee						*/
+int nbCompetencesPerOperator[Operator];
+float ratioSkills[0..maxVersatility];	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
+
+
 /*											VARIABLES							*/
 dvar boolean OperatorCompetenceMatrix[Operator][Competence]; //xjk
 dvar int HourlyWorkingTime[Operator][Competence]; //tjk
 dvar boolean Team[Operator]; // zj
-dvar boolean nbOfCompetencesOwned[0..maxVersatility][Operator]; //oij
-dvar int nbOfMinCompetencesNeeded[0..maxVersatility]; //Nimin
-dvar int nbOfMaxCompetencesNeeded[0..maxVersatility]; //Nimax
+//dvar boolean nbOfCompetencesOwned[0..maxVersatility][Operator]; //oij
+//dvar int nbOfMinCompetencesNeeded[0..maxVersatility]; //Nimin
+//dvar int nbOfMaxCompetencesNeeded[0..maxVersatility]; //Nimax
+//dvar int ratioSkills[0..maxVersatility];	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
+
 
 dexpr int totalTeam = sum(j in Operator) Team[j]; // Sum(zj)
 
@@ -84,8 +90,13 @@ constraints {
 	
   forall(j in Operator)
     sum(k in Competence) OperatorCompetenceMatrix[j][k] <= Team[j] * maxVersatility; // (II.4)(9)
-    
-
+  
+  
+  sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] >= sum(k in Competence) demand[k];
+  
+  sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] <= sum(j in Operator) hourlyAvailability[j];
+  
+      /*
   forall(j in Operator)
     sum(i in 0..maxVersatility) nbOfCompetencesOwned[i][j] <= 1; // (II.4)(10)
       
@@ -95,32 +106,49 @@ constraints {
   forall(i in 0..maxVersatility)
     forall(j in Operator)
       sum(k in Competence) OperatorCompetenceMatrix[j][k] >= i*nbOfCompetencesOwned[i][j]; // (II.4)(12)
-    
-  /*
+  
   forall(i in 0..maxVersatility)
     forall(j in Operator)
       maxVersatility*(1-Team[j])+i-sum(k in Competence)OperatorCompetenceMatrix[j][k] >= maxVersatility*(1-nbOfCompetencesOwned[i][j]); // (II.4)(13)
-  */
-  
   
   forall(j in Operator)
   	1-Team[j] <= nbOfCompetencesOwned[0][j]; // (II.4)(14)
   
   forall(i in 0..maxVersatility)
-    nbOfMinCompetencesNeeded[i] <= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(15)
+    nbOfMinCompetencesNeeded[i] <= ratioSkills[i]; // (II.4)(15)
   
   forall(i in 0..maxVersatility)
-    nbOfMinCompetencesNeeded[i] > ratioSkills[i] * (sum(j in Operator) Team[j]) - 1; // (II.4)(16)
+    nbOfMinCompetencesNeeded[i] > ratioSkills[i] - 1; // (II.4)(16)
   
   forall(i in 0..maxVersatility)
-    nbOfMaxCompetencesNeeded[i] >= ratioSkills[i] * sum(j in Operator) Team[j]; // (II.4)(17)
+    nbOfMaxCompetencesNeeded[i] >= ratioSkills[i]; // (II.4)(17)
   
   forall(i in 0..maxVersatility)
-    nbOfMaxCompetencesNeeded[i] < ratioSkills[i] * sum(j in Operator) Team[j] + 1; // (II.4)(18)
+    nbOfMaxCompetencesNeeded[i] < ratioSkills[i]+ 1; // (II.4)(18)
   
   forall(i in 0..maxVersatility)
      sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
                                                           
   forall(i in 0..maxVersatility)
     sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20) 
+*/
 }
+
+execute {
+	  for (var j = 0;j < 15;j++){
+	    for (var k = 0;k < 12;k++){
+	      nbCompetencesPerOperator[j] += OperatorCompetenceMatrix[j][k];
+	    }
+	  }
+	  for (var j = 0;j < 15;j++){
+	      ratioSkills[nbCompetencesPerOperator[j]] += 1;
+	  }
+	  for (var i = 0;i <= 10;i++){
+	      ratioSkills[i] = ratioSkills[i]/totalTeam;
+	  }
+	/*writeln('Nombre de Competences par operateur',nbCompetencesPerOperator);
+	writeln('Ratio des membres de lequipe', ratioSkills);
+	*/
+	writeln("Member in team = " + totalTeam);
+}
+
