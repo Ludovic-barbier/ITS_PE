@@ -135,15 +135,15 @@ constraints {
 }
 
 execute {
-	  for (var j = 0;j < 15;j++){
-	    for (var k = 0;k < 12;k++){
+	  for (var j = 0;j < 5;j++){
+	    for (var k = 0;k < 5;k++){
 	      nbCompetencesPerOperator[j] += OperatorCompetenceMatrix[j][k];
 	    }
 	  }
-	  for (var j = 0;j < 15;j++){
+	  for (var j = 0;j < 5;j++){
 	      ratioSkills[nbCompetencesPerOperator[j]] += 1;
 	  }
-	  for (var i = 0;i <= 10;i++){
+	  for (var i = 0;i <= 5;i++){
 	      ratioSkills[i] = ratioSkills[i]/totalTeam;
 	  }
 	/*writeln('Nombre de Competences par operateur',nbCompetencesPerOperator);

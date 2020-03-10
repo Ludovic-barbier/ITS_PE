@@ -1,36 +1,23 @@
-/*********************************************
- * OPL 12.9.0.0 Data
- * Author: ludov
- * Creation Date: 24 f�vr. 2020 at 10:51:33
- *********************************************/
-
-SheetConnection res("res.csv");
-SheetConnection workload("workload.csv");
-SheetConnection max_op("max_op.csv");
-SheetConnection min_op("min_op.csv");
-
-
-
-Operator = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
-Competence = {0,1,2,3,4,5,6,7,8,9,10,11};
+Operator = {0,1,2,3,4};
+Competence = {0,1,2,3,4};
 
 //Competence
-//demand = [1,1,1,1,1,1];
-demand from SheetRead(workload,"'workload'!A1:A12");
+demand = [5,5,5,5,5];
+//demand from SheetRead(workload,"'workload'!A1:A12");
 //Operators
-hourlyAvailability = [1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856];
+hourlyAvailability = [25,25,25,25,25];
 //Others
-//minOperator = [1,1,1,1,1,1];
-//maxOperator = [5,5,5,5,5,5];
-minOperator from SheetRead(min_op,"'min_op'!A1:A12");
-maxOperator from SheetRead(max_op,"'max_op'!A1:A12");
+minOperator = [1,1,1,1,1];
+maxOperator = [5,5,5,5,5];
+//minOperator from SheetRead(min_op,"'min_op'!A1:A12");
+//maxOperator from SheetRead(max_op,"'max_op'!A1:A12");
 
-minVersatility = 1;
-maxVersatility = 10;
+minVersatility = 0;
+maxVersatility = 5;
 
 //ratioSkills = [0,0.05,0.15,0.2,0.1,0.15,0.05,0.1,0.05,0.05,0.1];
 
-compatibility from SheetRead(res,"'res'!A1:L12");
-
-timeRatio = 0.1;
+//compatibility from SheetRead(res,"'res'!A1:L12");
+compatibility = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
+timeRatio = 0;
 
