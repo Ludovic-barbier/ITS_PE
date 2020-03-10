@@ -9,6 +9,7 @@ Original file is located at
 
 import pandas as pd
 import numpy as np
+from babel.numbers import format_decimal
 
 def extract_int(competence):
     return([int(s) for s in competence.split() if s.isdigit()])
@@ -56,7 +57,7 @@ def creation_association_rule_area(tab_competence):
       if(extract_int(tab_competence[j])[0] <= extract_int(tab_competence[i])[0]):
         tab_res_association_rule[i][j] = extract_association_rule(tab_competence[i], tab_competence[j], file_to_read)
         tab_res_association_rule[j][i] = tab_res_association_rule[i][j]
-  np.savetxt('res.csv', tab_res_association_rule, delimiter=';')
+  np.savetxt('res.csv', tab_res_association_rule, delimiter=';', fmt='%d')
 
 def workload_per_competences(tab_competence):
     data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
@@ -65,6 +66,12 @@ def workload_per_competences(tab_competence):
         for j in range(data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].size):
             workload[i] = workload[i] + data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].values[0]
     np.savetxt('workload.csv', workload, delimiter=';', fmt='%.2f')
+    text = open("workload.csv", "r")
+    text = ''.join([i for i in text]) \
+        .replace(".", ",")
+    x = open("workload.csv","w")
+    x.writelines(text)
+    x.close()
 
 def min_op_max_op(tab_competence):
     data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\Interval_duplication_competency.csv', sep=';')
@@ -73,9 +80,39 @@ def min_op_max_op(tab_competence):
     for i in range(len(tab_competence)):
         list_min_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MIN DUPLICATION'].values[0]
         list_max_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MAX DUPLICATION'].values[0]
-    np.savetxt('min_op.csv', list_min_op, delimiter=';')
-    np.savetxt('max_op.csv', list_max_op, delimiter=';')
+    np.savetxt('min_op.csv', list_min_op, delimiter=';', fmt='%d')
+    np.savetxt('max_op.csv', list_max_op, delimiter=';', fmt='%d')
 
-workload_per_competences(competences_from_area('AREA 8'))
-creation_association_rule_area(competences_from_area('AREA 8'))
-min_op_max_op(competences_from_area('AREA 8'))
+def create_files_from_area(area):
+    workload_per_competences(competences_from_area(area))
+    creation_association_rule_area(competences_from_area(area))
+    min_op_max_op(competences_from_area(area))
+
+
+
+
+#####################     CREATE FILES     ######################
+
+
+
+
+create_files_from_area('AREA 8')
+
+
+
+
+#####################     CREATE FILES     ######################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
