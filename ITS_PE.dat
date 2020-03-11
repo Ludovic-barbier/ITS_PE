@@ -8,6 +8,7 @@ SheetConnection res("res.csv");
 SheetConnection workload("workload.csv");
 SheetConnection max_op("max_op.csv");
 SheetConnection min_op("min_op.csv");
+SheetConnection people_nb_competencies("people_nb_competencies.csv");
 
 
 
@@ -28,7 +29,7 @@ maxOperator from SheetRead(max_op,"'max_op'!A1:A12");
 minVersatility = 1;
 maxVersatility = 10;
 
-//ratioSkills = [0,0.05,0.15,0.2,0.1,0.15,0.05,0.1,0.05,0.05,0.1];
+ratioSkills from SheetRead(people_nb_competencies,"'people_nb_competencies'!A2:J2");
 
 compatibility from SheetRead(res,"'res'!A1:L12");
 
