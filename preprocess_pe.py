@@ -104,8 +104,8 @@ def create_files_from(type, name):
 
 
 
-create_files_from('area', 'AREA 8')
-#create_files_from('zone', 'ZONE 7')
+#create_files_from('area', 'AREA 8')
+create_files_from('zone', 'ZONE 7')
 
 
 
