@@ -28,7 +28,7 @@ float timeRatio = ...; //(alpha k) Ratio of time an operator has to spend on com
 
 /*											Donn�es int�ressantes � afficher pour la suitee						*/
 int nbCompetencesPerOperator[Operator];
-float ratioSkills[0..maxVersatility];	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
+float ratioSkills[minVersatility..maxVersatility];	// (vi) The ratio of operators with i competences. The sum of (vi) have to be 1
 
 
 /*											VARIABLES							*/
@@ -141,9 +141,10 @@ execute {
 	    }
 	  }
 	  for (var j = 0;j < 15;j++){
+	    if (nbCompetencesPerOperator[j]>=minVersatility)
 	      ratioSkills[nbCompetencesPerOperator[j]] += 1;
 	  }
-	  for (var i = 0;i <= 10;i++){
+	  for (var i = minVersatility;i <= maxVersatility;i++){
 	      ratioSkills[i] = ratioSkills[i]/totalTeam;
 	  }
 	/*writeln('Nombre de Competences par operateur',nbCompetencesPerOperator);
