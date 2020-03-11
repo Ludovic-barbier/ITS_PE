@@ -12,26 +12,26 @@ SheetConnection people_nb_competencies("people_nb_competencies.csv");
 
 
 
-Operator = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
-Competence = {0,1,2,3,4,5,6,7,8,9,10,11};
+Operator = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+Competence = {0,1,2,3,4,5,6,7,8,9};
 
 //Competence
 //demand = [1,1,1,1,1,1];
-demand from SheetRead(workload,"'workload'!A1:A12");
+demand from SheetRead(workload,"'workload'!A1:A10");
 //Operators
-hourlyAvailability = [1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856];
+hourlyAvailability = [1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856,1856];
 //Others
 //minOperator = [1,1,1,1,1,1];
 //maxOperator = [5,5,5,5,5,5];
-minOperator from SheetRead(min_op,"'min_op'!A1:A12");
-maxOperator from SheetRead(max_op,"'max_op'!A1:A12");
+minOperator from SheetRead(min_op,"'min_op'!A1:A10");
+maxOperator from SheetRead(max_op,"'max_op'!A1:A10");
 
 minVersatility = 1;
 maxVersatility = 10;
 
 ratioSkills from SheetRead(people_nb_competencies,"'people_nb_competencies'!A2:J2");
 
-compatibility from SheetRead(res,"'res'!A1:L12");
+compatibility from SheetRead(res,"'res'!A1:J10");
 
-timeRatio = 0.1;
+timeRatio = 0;
 

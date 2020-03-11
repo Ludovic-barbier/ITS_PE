@@ -55,54 +55,51 @@ dexpr int totalTeam = sum(j in Operator) Team[j]; // Sum(zj)
 minimize totalTeam;
 constraints {
 
+  c1:
   forall(k in Competence)
      sum(j in Operator) OperatorCompetenceMatrix[j][k] >= minOperator[k]; // (II.4)(1)
-
+  c2:
   forall(k in Competence)
      sum(j in Operator) OperatorCompetenceMatrix[j][k] <= maxOperator[k]; // (II.4)(2)
-
+  c3:
   forall(j in Operator)
   	 forall(k in Competence)
   	   forall(k2 in Competence)
   	     if(compatibility[k][k2] == 0) {
   	     	OperatorCompetenceMatrix[j][k] + OperatorCompetenceMatrix[j][k2] <= 1;  	 //(II.4)(3)
   	     }
-
+  c4:
   forall(j in Operator)
     sum(k in Competence) HourlyWorkingTime[j][k] <= hourlyAvailability[j]; // (II.4)(4)
-
+  c5:
   forall(k in Competence)
     sum(j in Operator) HourlyWorkingTime[j][k] >= demand[k]; // (II.4)(5)
-
+  c6:
   forall(j in Operator)
     forall(k in Competence)
       HourlyWorkingTime[j][k] >= timeRatio*hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(6)
-
+  c7:
   forall(j in Operator)
     forall(k in Competence)
       HourlyWorkingTime[j][k] <= hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(7)
      
-     
-        
+  c8:    
   forall(j in Operator)
     sum(k in Competence) OperatorCompetenceMatrix[j][k] >= Team[j] * minVersatility; // (II.4)(8)
       
-	
+  c9:
   forall(j in Operator)
     sum(k in Competence) OperatorCompetenceMatrix[j][k] <= Team[j] * maxVersatility; // (II.4)(9)
-  
-  
-  sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] >= sum(k in Competence) demand[k];
-  
-  sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] <= sum(j in Operator) hourlyAvailability[j];
-  
-      
+   
+  c10: 
   forall(j in Operator)
     sum(i in 0..maxVersatility) nbOfCompetencesOwned[i][j] <= sum(k in Competence) OperatorCompetenceMatrix[j][k] +1; // (II.4)(10)
-      
+   
+  c11:
   forall(j in Operator)
     sum(i in 0..maxVersatility) nbOfCompetencesOwned[i][j] >= Team[j]*sum(k in Competence) OperatorCompetenceMatrix[j][k] +1; // (II.4)(11)
  
+  c12:
   forall(i in 0..maxVersatility)
 	forall(j in Operator)
       sum(k in Competence) OperatorCompetenceMatrix[j][k]  >= i*nbOfCompetencesOwned[i][j]; // (II.4)(12)
@@ -111,27 +108,40 @@ constraints {
     forall(j in Operator)
       maxVersatility*(1-Team[j])+i-sum(k in Competence)OperatorCompetenceMatrix[j][k] >= maxVersatility*(1-nbOfCompetencesOwned[i][j]); // (II.4)(13)
    */
+  
+  c14:
   forall(j in Operator)
   	1-Team[j] <= nbOfCompetencesOwned[0][j]; // (II.4)(14)
   
+  c15:
   forall(i in minVersatility..maxVersatility)
     nbOfMinCompetencesNeeded[i] <= ratioSkills[i]*sum(j in Operator) Team[j]; // (II.4)(15)
   
+  c16:
   forall(i in minVersatility..maxVersatility)
     nbOfMinCompetencesNeeded[i] > sum(j in Operator) Team[j]*ratioSkills[i] - 1; // (II.4)(16)
   
+  c17:
   forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] >= sum(j in Operator) Team[j]*ratioSkills[i]; // (II.4)(17)
   
+  c18:
   forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] < sum(j in Operator) Team[j]*ratioSkills[i]+ 1; // (II.4)(18)
 
+  c19:
   forall(i in minVersatility..maxVersatility)
      sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
-                                                          
+  
+  c20:                                                    
   forall(i in minVersatility..maxVersatility)
     sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20) 
 
+  cut1:
+  sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] >= sum(k in Competence) demand[k];
+	
+  cut2:
+  sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] <= sum(j in Operator) hourlyAvailability[j];
 }
 /*
 execute {
