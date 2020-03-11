@@ -47,7 +47,7 @@ def competences_from_area(area):
             competences.append(data[data['AREA']==area]['COMPETENCY'].values[j])
     return(competences)
 
-def creation_association_rule_area(tab_competence):
+def creation_association_rule(tab_competence):
   file_to_read = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\Association_Rule.csv', sep=';')
   tab_res_association_rule = np.zeros((len(tab_competence), len(tab_competence)), dtype=np.int8)
   for i in range(len(tab_competence)):
@@ -83,10 +83,18 @@ def min_op_max_op(tab_competence):
     np.savetxt('min_op.csv', list_min_op, delimiter=';', fmt='%d')
     np.savetxt('max_op.csv', list_max_op, delimiter=';', fmt='%d')
 
-def create_files_from_area(area):
-    workload_per_competences(competences_from_area(area))
-    creation_association_rule_area(competences_from_area(area))
-    min_op_max_op(competences_from_area(area))
+def create_files_from(type, name):
+    if(type == 'zone'):
+        workload_per_competences(competences_from_zone(name))
+        creation_association_rule(competences_from_zone(name))
+        min_op_max_op(competences_from_zone(name))
+    elif(type == 'area'):
+        workload_per_competences(competences_from_area(name))
+        creation_association_rule(competences_from_area(name))
+        min_op_max_op(competences_from_area(name))
+    else:
+        print("WRONG TYPE")
+
 
 
 
@@ -96,8 +104,8 @@ def create_files_from_area(area):
 
 
 
-create_files_from_area('AREA 8')
-
+#create_files_from('area', 'AREA 8')
+create_files_from('zone', 'ZONE 7')
 
 
 
