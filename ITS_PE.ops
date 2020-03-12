@@ -2,6 +2,6 @@
 
 <settings version="2">
   <category name="cp">
-    <setting name="timelimit" value="1.0E9"/>
+    <setting name="timelimit" value="20.0"/>
   </category>
 </settings>

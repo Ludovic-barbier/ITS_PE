@@ -16,7 +16,7 @@ float hourlyAvailability[Operator] = ...;	// (aj) The hourly availability of ope
 
 //Others
 int minOperator[Competence] = ...;		// (min_opk) The minimum number of operators that has to be qualified on competence k
-int maxOperator[Competence] = ...;		// (min_opj) The maximum number of operators that has to be qualified on competence k
+int maxOperator[Competence] = ...;		// (min_opk) The maximum number of operators that has to be qualified on competence k
 
 int minVersatility = ...;	// The maximum number of competences an operator can possess
 int maxVersatility = ...; // The minimum number of competences an operator can possess
@@ -143,8 +143,9 @@ constraints {
   cut2:
   sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] <= sum(j in Operator) hourlyAvailability[j];
 }
-/*
+
 execute {
+  /*
 	  for (var j = 0;j < 15;j++){
 	    for (var k = 0;k < 12;k++){
 	      nbCompetencesPerOperator[j] += OperatorCompetenceMatrix[j][k];
@@ -157,7 +158,7 @@ execute {
 	  for (var i = minVersatility;i <= maxVersatility;i++){
 	      ratioSkills[i] = ratioSkills[i]/totalTeam;
 	  }
-
+*/
 	writeln("Member in team = " + totalTeam);
-}*/
+}
 

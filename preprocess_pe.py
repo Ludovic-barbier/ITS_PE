@@ -57,7 +57,7 @@ def creation_association_rule(tab_competence):
       if(extract_int(tab_competence[j])[0] <= extract_int(tab_competence[i])[0]):
         tab_res_association_rule[i][j] = extract_association_rule(tab_competence[i], tab_competence[j], file_to_read)
         tab_res_association_rule[j][i] = tab_res_association_rule[i][j]
-  np.savetxt('res.csv', tab_res_association_rule, delimiter=';', fmt='%d')
+  return tab_res_association_rule
 
 def workload_per_competences(tab_competence):
     data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
@@ -65,13 +65,7 @@ def workload_per_competences(tab_competence):
     for i in range(len(tab_competence)):
         for j in range(data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].size):
             workload[i] = workload[i] + data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].values[0]
-    np.savetxt('workload.csv', workload, delimiter=';', fmt='%.2f')
-    text = open("workload.csv", "r")
-    text = ''.join([i for i in text]) \
-        .replace(".", ",")
-    x = open("workload.csv","w")
-    x.writelines(text)
-    x.close()
+    return workload
 
 def min_op_max_op(tab_competence):
     data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\Interval_duplication_competency.csv', sep=';')
@@ -80,18 +74,141 @@ def min_op_max_op(tab_competence):
     for i in range(len(tab_competence)):
         list_min_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MIN DUPLICATION'].values[0]
         list_max_op[i] = data[data['COMPETENCY']==tab_competence[i]]['MAX DUPLICATION'].values[0]
-    np.savetxt('min_op.csv', list_min_op, delimiter=';', fmt='%d')
-    np.savetxt('max_op.csv', list_max_op, delimiter=';', fmt='%d')
+    return list_min_op, list_max_op
 
-def create_files_from(type, name):
+def ratio_skills():
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\people_nb_competencies.csv', sep=';')
+    ratio = []
+    for i in range(data.filter(regex='OCR').size):
+        ratio.append(data.values[0][i])
+    return ratio
+
+def create_file_from(type, name, nb, minVers, maxVers, time):
     if(type == 'zone'):
-        workload_per_competences(competences_from_zone(name))
-        creation_association_rule(competences_from_zone(name))
-        min_op_max_op(competences_from_zone(name))
+        file='ITS_PE.dat'
+        with open(file, 'w') as filetowrite:
+
+            workload = workload_per_competences(competences_from_zone(name))
+            association_rule = creation_association_rule(competences_from_zone(name))
+            liste_min_op, liste_max_op = min_op_max_op(competences_from_zone(name))
+            ratio = ratio_skills()
+
+            print(liste_min_op)
+            print(liste_max_op)
+            filetowrite.write('Operator = {')
+            for i in range(0, nb-1):
+                filetowrite.write(str(i)+',')
+            filetowrite.write(str(nb-1)+'};\n')
+
+            filetowrite.write('Competence = {')
+            for i in range(0, len(workload)-1):
+                filetowrite.write(str(i)+',')
+            filetowrite.write(str(len(workload)-1)+'};\n')
+
+            filetowrite.write('demand = [')
+            for i in range(0, len(workload)-1):
+                filetowrite.write(f'{int(workload[i])},')
+            filetowrite.write(f'{int(workload[-1])}];\n')
+
+            filetowrite.write('hourlyAvailability = [')
+            for i in range(0, nb-1):
+                filetowrite.write('1485.12,')
+            filetowrite.write('1485.12];\n')
+
+            filetowrite.write('minOperator = [')
+            for i in range(0, len(liste_min_op)-1):
+                print(int(liste_min_op[i]))
+                filetowrite.write(f'{int(liste_min_op[i])},')
+            filetowrite.write(f'{int(liste_min_op[-1])}];\n')
+
+            filetowrite.write('maxOperator = [')
+            for i in range(0, len(liste_max_op)-1):
+                filetowrite.write(f'{int(liste_max_op[i])},')
+            filetowrite.write(f'{int(liste_max_op[-1])}];\n')
+
+            filetowrite.write(f'minVersatility = {int(minVers)};\n')
+            filetowrite.write(f'maxVersatility = {int(maxVers)};\n')
+
+            filetowrite.write('ratioSkills = [')
+            for i in range(0, len(ratio)-1):
+                filetowrite.write(str(ratio[i])+',')
+            filetowrite.write(str(ratio[-1])+'];\n')
+
+            filetowrite.write('timeRatio = '+str(time)+';\n')
+
+            filetowrite.write('compatibility = [')
+            for i in range(0, association_rule.shape[0]-1):
+                filetowrite.write('[')
+                for j in range(0, association_rule.shape[1]-1):
+                    filetowrite.write(f'{int(association_rule[i][j])},')
+                filetowrite.write(f'{int(association_rule[i][-1])}],')
+            filetowrite.write('[')
+            for j in range(0, association_rule.shape[1]-1):
+                filetowrite.write(f'{int(association_rule[-1][j])},')
+            filetowrite.write(f'{int(association_rule[-1][-1])}]];\n')
+
+        filetowrite.close()
     elif(type == 'area'):
-        workload_per_competences(competences_from_area(name))
-        creation_association_rule(competences_from_area(name))
-        min_op_max_op(competences_from_area(name))
+        file='ITS_PE.dat'
+        with open(file, 'w') as filetowrite:
+
+            workload = workload_per_competences(competences_from_area(name))
+            association_rule = creation_association_rule(competences_from_area(name))
+            liste_min_op, liste_max_op = min_op_max_op(competences_from_area(name))
+            ratio = ratio_skills()
+
+            filetowrite.write('Operator = {')
+            for i in range(0, nb-1):
+                filetowrite.write(str(i)+',')
+            filetowrite.write(str(nb-1)+'};\n')
+
+            filetowrite.write('Competence = {')
+            for i in range(0, len(workload)-1):
+                filetowrite.write(str(i)+',')
+            filetowrite.write(str(len(workload)-1)+'};\n')
+
+            filetowrite.write('demand = [')
+            for i in range(0, len(workload)-1):
+                filetowrite.write(f'{int(workload[i])},')
+            filetowrite.write(f'{int(workload[-1])}];\n')
+
+            filetowrite.write('hourlyAvailability = [')
+            for i in range(0, nb-1):
+                filetowrite.write('1485.12,')
+            filetowrite.write('1485.12];\n')
+
+            filetowrite.write('minOperator = [')
+            for i in range(0, len(liste_min_op)-1):
+                filetowrite.write(f'{int(liste_min_op[i])},')
+            filetowrite.write(f'{int(liste_min_op[-1])}];\n')
+
+            filetowrite.write('maxOperator = [')
+            for i in range(0, len(liste_max_op)-1):
+                filetowrite.write(f'{int(liste_max_op[-1])},')
+            filetowrite.write(f'{int(liste_max_op[-1])}];\n')
+
+            filetowrite.write(f'minVersatility = {int(minVers)};\n')
+            filetowrite.write(f'maxVersatility = {int(maxVers)};\n')
+
+            filetowrite.write('ratioSkills = [')
+            for i in range(0, len(ratio)-1):
+                filetowrite.write(str(ratio[i])+',')
+            filetowrite.write(str(ratio[-1])+'];\n')
+
+            filetowrite.write('timeRatio = '+str(time)+';\n')
+
+            filetowrite.write('compatibility = [')
+            for i in range(0, association_rule.shape[0]-1):
+                filetowrite.write('[')
+                for j in range(0, association_rule.shape[1]-1):
+                    filetowrite.write(f'{int(association_rule[i][j])},')
+                filetowrite.write(f'{int(association_rule[i][-1])}],')
+            filetowrite.write('[')
+            for j in range(0, association_rule.shape[1]-1):
+                filetowrite.write(f'{int(association_rule[-1][j])},')
+            filetowrite.write(f'{int(association_rule[-1][-1])}]];\n')
+
+        filetowrite.close()
     else:
         print("WRONG TYPE")
 
@@ -103,10 +220,8 @@ def create_files_from(type, name):
 
 
 
-
-create_files_from('area', 'AREA 10')
-#create_files_from('zone', 'ZONE 7')
-
+create_file_from('zone', 'ZONE 3', 21, 1, 10, 0)
+#create_file_from('zone', 'ZONE 7')
 
 
 #####################     CREATE FILES     ######################
