@@ -93,8 +93,6 @@ def create_file_from(type, name, nb, minVers, maxVers, time):
             liste_min_op, liste_max_op = min_op_max_op(competences_from_zone(name))
             ratio = ratio_skills()
 
-            print(liste_min_op)
-            print(liste_max_op)
             filetowrite.write('Operator = {')
             for i in range(0, nb-1):
                 filetowrite.write(str(i)+',')
@@ -117,7 +115,6 @@ def create_file_from(type, name, nb, minVers, maxVers, time):
 
             filetowrite.write('minOperator = [')
             for i in range(0, len(liste_min_op)-1):
-                print(int(liste_min_op[i]))
                 filetowrite.write(f'{int(liste_min_op[i])},')
             filetowrite.write(f'{int(liste_min_op[-1])}];\n')
 
@@ -169,8 +166,8 @@ def create_file_from(type, name, nb, minVers, maxVers, time):
 
             filetowrite.write('demand = [')
             for i in range(0, len(workload)-1):
-                filetowrite.write(f'{int(workload[i])},')
-            filetowrite.write(f'{int(workload[-1])}];\n')
+                filetowrite.write(f'{workload[i]},')
+            filetowrite.write(f'{workload[-1]}];\n')
 
             filetowrite.write('hourlyAvailability = [')
             for i in range(0, nb-1):
@@ -220,7 +217,7 @@ def create_file_from(type, name, nb, minVers, maxVers, time):
 
 
 
-create_file_from('zone', 'ZONE 3', 21, 1, 10, 0)
+create_file_from('zone', 'ZONE 1', 10, 1, 10, 0)
 #create_file_from('zone', 'ZONE 7')
 
 

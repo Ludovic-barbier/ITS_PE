@@ -3,7 +3,7 @@
  * Author: ludov
  * Creation Date: 24 f�vr. 2020 at 10:51:33
  *********************************************/
-using CP;
+using CPLEX;
 
  /*											DATA 					*/
 {int} Operator = ...; //  J operators
@@ -33,7 +33,7 @@ float ratioSkills[minVersatility..maxVersatility]=...;	// (vi) The ratio of oper
 
 /*											VARIABLES							*/
 dvar boolean OperatorCompetenceMatrix[Operator][Competence]; //xjk
-dvar int HourlyWorkingTime[Operator][Competence]; //tjk
+dvar float HourlyWorkingTime[Operator][Competence]; //tjk
 dvar boolean Team[Operator]; // zj
 dvar boolean nbOfCompetencesOwned[0..maxVersatility][Operator]; //oij
 dvar int nbOfMinCompetencesNeeded[minVersatility..maxVersatility]; //Nimin
@@ -63,11 +63,9 @@ constraints {
      sum(j in Operator) OperatorCompetenceMatrix[j][k] <= maxOperator[k]; // (II.4)(2)
   c3:
   forall(j in Operator)
-  	 forall(k in Competence)
-  	   forall(k2 in Competence)
-  	     if(compatibility[k][k2] == 0) {
-  	     	OperatorCompetenceMatrix[j][k] + OperatorCompetenceMatrix[j][k2] <= 1;  	 //(II.4)(3)
-  	     }
+       forall(k in Competence)
+         forall(k2 in Competence)
+           OperatorCompetenceMatrix[j][k] + OperatorCompetenceMatrix[j][k2] <= 1+compatibility[k][k2];  // (II.4)(3)
   c4:
   forall(j in Operator)
     sum(k in Competence) HourlyWorkingTime[j][k] <= hourlyAvailability[j]; // (II.4)(4)
@@ -93,7 +91,8 @@ constraints {
    
   c10: 
   forall(j in Operator)
-    sum(i in 0..maxVersatility) nbOfCompetencesOwned[i][j] <= sum(k in Competence) OperatorCompetenceMatrix[j][k] +1; // (II.4)(10)
+    forall(i in 0..maxVersatility-1)
+      nbOfCompetencesOwned[i][j]>= nbOfCompetencesOwned[i+1][j];  // (II.4)(10)
    
   c11:
   forall(j in Operator)
@@ -119,7 +118,7 @@ constraints {
   
   c16:
   forall(i in minVersatility..maxVersatility)
-    nbOfMinCompetencesNeeded[i] > sum(j in Operator) Team[j]*ratioSkills[i] - 1; // (II.4)(16)
+    nbOfMinCompetencesNeeded[i] >= sum(j in Operator) Team[j]*ratioSkills[i] - 0.99; // (II.4)(16)
   
   c17:
   forall(i in minVersatility..maxVersatility)
@@ -127,7 +126,7 @@ constraints {
   
   c18:
   forall(i in minVersatility..maxVersatility)
-    nbOfMaxCompetencesNeeded[i] < sum(j in Operator) Team[j]*ratioSkills[i]+ 1; // (II.4)(18)
+    nbOfMaxCompetencesNeeded[i] <= sum(j in Operator) Team[j]*ratioSkills[i]+ 0.99; // (II.4)(18)
 
   c19:
   forall(i in minVersatility..maxVersatility)
