@@ -3,6 +3,7 @@
  * Author: ludov
  * Creation Date: 24 f�vr. 2020 at 10:51:33
  *********************************************/
+
 using CP;
 
  /*											DATA 					*/
@@ -143,22 +144,67 @@ constraints {
   cut2:
   sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] <= sum(j in Operator) hourlyAvailability[j];
 }
+/*
+execute {
+	var f = new IloOplOutputFile("results.csv");
+	for(var i in Competence) {
+	  for (var j in Competence) {
+	    f.writeln(OperatorCompetenceMatrix[i][j],"\t");
+	  }
+	  f.writeln("\n");
+	}
+	f.close();
+}*/
+
 
 execute {
-  /*
-	  for (var j = 0;j < 15;j++){
-	    for (var k = 0;k < 12;k++){
-	      nbCompetencesPerOperator[j] += OperatorCompetenceMatrix[j][k];
-	    }
-	  }
-	  for (var j = 0;j < 15;j++){
-	    if (nbCompetencesPerOperator[j]>=minVersatility)
-	      ratioSkills[nbCompetencesPerOperator[j]] += 1;
-	  }
-	  for (var i = minVersatility;i <= maxVersatility;i++){
-	      ratioSkills[i] = ratioSkills[i]/totalTeam;
-	  }
-*/
-	writeln("Member in team = " + totalTeam);
+	var ofile = new IloOplOutputFile("results.txt");
+  
+	ofile.writeln("Xjk: ");
+	for(var i in Competence){
+		for (var j in Competence) {
+			ofile.write(OperatorCompetenceMatrix[i][j]+"\t");
+			}
+	ofile.write("\n");
+	}
+	ofile.writeln("\n");
+  
+	ofile.writeln("Tjk: ");
+	for(var i in Operator){
+		for (var j in Competence) {
+			ofile.write(HourlyWorkingTime[i][j]+"\t");
+			}
+	ofile.write("\n");
+	}
+	ofile.writeln("\n");
+
+	ofile.writeln("Oij: ");
+	for(var i = 0 ; i<maxVersatility ; i++){
+		for (var j in Operator) {
+			ofile.write(nbOfCompetencesOwned[i][j]+"\t");
+			}
+	ofile.write("\n");
+	}
+	ofile.writeln("\n");
+
+	ofile.writeln("Zj: ");
+	for(var j in Operator){
+		ofile.write(Team[j]+"\t");
+	}
+	ofile.writeln("\n");
+  
+  	ofile.writeln("Nimin: ");
+	for(var i = minVersatility ; i<maxVersatility ; i++){
+		ofile.write(nbOfMinCompetencesNeeded[i]+"\t");
+	}
+	ofile.writeln("\n");
+	
+	ofile.writeln("Nimax: ");
+	for(var i = minVersatility ; i<maxVersatility ; i++){
+		ofile.write(nbOfMaxCompetencesNeeded[i]+"\t");
+	}
+	ofile.writeln("\n");
+  
+  ofile.close();
 }
 
