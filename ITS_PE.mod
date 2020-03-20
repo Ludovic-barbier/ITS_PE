@@ -3,6 +3,7 @@
  * Author: ludov
  * Creation Date: 24 f�vr. 2020 at 10:51:33
  *********************************************/
+ 
 using CPLEX;
 
  /*											DATA 					*/
@@ -80,24 +81,24 @@ constraints {
   forall(j in Operator)
     forall(k in Competence)
       HourlyWorkingTime[j][k] <= hourlyAvailability[j]*OperatorCompetenceMatrix[j][k]; // (II.4)(7)
-     
-  c8:    
+
+  c8:
   forall(j in Operator)
     sum(k in Competence) OperatorCompetenceMatrix[j][k] >= Team[j] * minVersatility; // (II.4)(8)
-      
+
   c9:
   forall(j in Operator)
     sum(k in Competence) OperatorCompetenceMatrix[j][k] <= Team[j] * maxVersatility; // (II.4)(9)
-   
-  c10: 
+
+  c10:
   forall(j in Operator)
     forall(i in 0..maxVersatility-1)
       nbOfCompetencesOwned[i][j]>= nbOfCompetencesOwned[i+1][j];  // (II.4)(10)
-   
+
   c11:
   forall(j in Operator)
     sum(i in 0..maxVersatility) nbOfCompetencesOwned[i][j] >= Team[j]*sum(k in Competence) OperatorCompetenceMatrix[j][k] +1; // (II.4)(11)
- 
+
   c12:
   forall(i in 0..maxVersatility)
 	forall(j in Operator)
@@ -107,23 +108,23 @@ constraints {
     forall(j in Operator)
       maxVersatility*(1-Team[j])+i-sum(k in Competence)OperatorCompetenceMatrix[j][k] >= maxVersatility*(1-nbOfCompetencesOwned[i][j]); // (II.4)(13)
    */
-  
+
   c14:
   forall(j in Operator)
   	1-Team[j] <= nbOfCompetencesOwned[0][j]; // (II.4)(14)
-  
+
   c15:
   forall(i in minVersatility..maxVersatility)
     nbOfMinCompetencesNeeded[i] <= ratioSkills[i]*sum(j in Operator) Team[j]; // (II.4)(15)
-  
+
   c16:
   forall(i in minVersatility..maxVersatility)
     nbOfMinCompetencesNeeded[i] >= sum(j in Operator) Team[j]*ratioSkills[i] - 0.99; // (II.4)(16)
-  
+
   c17:
   forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] >= sum(j in Operator) Team[j]*ratioSkills[i]; // (II.4)(17)
-  
+
   c18:
   forall(i in minVersatility..maxVersatility)
     nbOfMaxCompetencesNeeded[i] <= sum(j in Operator) Team[j]*ratioSkills[i]+ 0.99; // (II.4)(18)
@@ -131,33 +132,77 @@ constraints {
   c19:
   forall(i in minVersatility..maxVersatility)
      sum(j in Operator) nbOfCompetencesOwned[i][j] >= nbOfMinCompetencesNeeded[i]; // (II.4)(19)
-  
-  c20:                                                    
+
+  c20:
   forall(i in minVersatility..maxVersatility)
-    sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20) 
+    sum(j in Operator) nbOfCompetencesOwned[i][j] <= nbOfMaxCompetencesNeeded[i]; //(II.4)(20)
 
   cut1:
   sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] >= sum(k in Competence) demand[k];
-	
+
   cut2:
   sum(j in Operator, k in Competence) HourlyWorkingTime[j][k] <= sum(j in Operator) hourlyAvailability[j];
 }
+/*
+execute {
+	var f = new IloOplOutputFile("results.csv");
+	for(var i in Competence) {
+	  for (var j in Competence) {
+	    f.writeln(OperatorCompetenceMatrix[i][j],"\t");
+	  }
+	  f.writeln("\n");
+	}
+	f.close();
+}*/
+
 
 execute {
-  /*
-	  for (var j = 0;j < 15;j++){
-	    for (var k = 0;k < 12;k++){
-	      nbCompetencesPerOperator[j] += OperatorCompetenceMatrix[j][k];
-	    }
-	  }
-	  for (var j = 0;j < 15;j++){
-	    if (nbCompetencesPerOperator[j]>=minVersatility)
-	      ratioSkills[nbCompetencesPerOperator[j]] += 1;
-	  }
-	  for (var i = minVersatility;i <= maxVersatility;i++){
-	      ratioSkills[i] = ratioSkills[i]/totalTeam;
-	  }
-*/
-	writeln("Member in team = " + totalTeam);
-}
+	var ofile = new IloOplOutputFile("results.txt");
 
+	ofile.writeln("Xjk: ");
+	for(var i in Competence){
+		for (var j in Competence) {
+			ofile.write(OperatorCompetenceMatrix[i][j]+"\t");
+			}
+	ofile.write("\n");
+	}
+	ofile.writeln("\n");
+
+	ofile.writeln("Tjk: ");
+	for(var i in Operator){
+		for (var j in Competence) {
+			ofile.write(HourlyWorkingTime[i][j]+"\t");
+			}
+	ofile.write("\n");
+	}
+	ofile.writeln("\n");
+
+	ofile.writeln("Oij: ");
+	for(var i = 0 ; i<maxVersatility ; i++){
+		for (var j in Operator) {
+			ofile.write(nbOfCompetencesOwned[i][j]+"\t");
+			}
+	ofile.write("\n");
+	}
+	ofile.writeln("\n");
+
+	ofile.writeln("Zj: ");
+	for(var j in Operator){
+		ofile.write(Team[j]+"\t");
+	}
+	ofile.writeln("\n");
+
+  	ofile.writeln("Nimin: ");
+	for(var i = minVersatility ; i<maxVersatility ; i++){
+		ofile.write(nbOfMinCompetencesNeeded[i]+"\t");
+	}
+	ofile.writeln("\n");
+
+	ofile.writeln("Nimax: ");
+	for(var i = minVersatility ; i<maxVersatility ; i++){
+		ofile.write(nbOfMaxCompetencesNeeded[i]+"\t");
+	}
+	ofile.writeln("\n");
+
+  ofile.close();
+}
