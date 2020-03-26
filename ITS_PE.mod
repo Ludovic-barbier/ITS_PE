@@ -155,6 +155,40 @@ execute {
 	f.close();
 }*/
 
+execute {
+  var ofile = new IloOplOutputFile("stats.txt");
+
+	ofile.writeln("Nb Op: ");
+	ofile.write(totalTeam);
+	ofile.writeln("\n");
+	
+	var TotalWorkingTime = 0.0;
+	ofile.writeln("Unanswered Demand: ");
+	for(var i in Operator){
+		for (var j in Competence) {
+			TotalWorkingTime = TotalWorkingTime + HourlyWorkingTime[i][j];
+		}
+	}
+	var TotalDemand = 0.0;
+	for(var j in Competence) {
+	  TotalDemand = TotalDemand + demand[j];
+	}
+	var UnansweredDemand = 100-(TotalWorkingTime* 100)/TotalDemand;
+	ofile.write(UnansweredDemand);
+	ofile.write("%");
+	ofile.writeln("\n");
+
+	var TotalOperator = Operator.size;
+	ofile.writeln("Unoccupied Operators: ");
+	var UnoccupiedOperators = 100-(totalTeam*100)/TotalOperator;
+	ofile.write(UnoccupiedOperators);
+	ofile.write("%");
+	ofile.writeln("\n");
+
+  ofile.close();
+  
+}
+
 
 execute {
 	var ofile = new IloOplOutputFile("results.txt");
