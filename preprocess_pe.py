@@ -25,13 +25,13 @@ def extract_association_rule(competency1, competency2, data):
     else:
         return False
 
-def extract_area(zone):
-    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\zone_area.csv', sep=";")
+def extract_area(set, zone):
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set '+str(set)+'\zone_area.csv', sep=";")
     return(data[data['ZONE']==zone]['AREA'].values)
 
-def competences_from_zone(zone):
-    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
-    areas = extract_area(zone)
+def competences_from_zone(set, zone):
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set '+str(set)+'\workload_by_competencies.csv', sep=";")
+    areas = extract_area(set, zone)
     competences = []
     for i in areas:
         for j in range(data[data['AREA']==i]['COMPETENCY'].size):
@@ -39,16 +39,16 @@ def competences_from_zone(zone):
                 competences.append(data[data['AREA']==i]['COMPETENCY'].values[j])
     return(competences)
 
-def competences_from_area(area):
-    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
+def competences_from_area(set, area):
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set '+str(set)+'\workload_by_competencies.csv', sep=";")
     competences = []
     for j in range(data[data['AREA']==area]['COMPETENCY'].size):
         if data[data['AREA']==area]['COMPETENCY'].values[j] not in competences:
             competences.append(data[data['AREA']==area]['COMPETENCY'].values[j])
     return(competences)
 
-def creation_association_rule(tab_competence):
-  file_to_read = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\Association_Rule.csv', sep=';')
+def creation_association_rule(set, tab_competence):
+  file_to_read = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set '+str(set)+'\Association_Rule.csv', sep=';')
   tab_res_association_rule = np.zeros((len(tab_competence), len(tab_competence)), dtype=np.int8)
   for i in range(len(tab_competence)):
     #tab_res_association_rule[i+1][0] = extract_int(tab_competence[i])[0]
@@ -59,16 +59,16 @@ def creation_association_rule(tab_competence):
         tab_res_association_rule[j][i] = tab_res_association_rule[i][j]
   return tab_res_association_rule
 
-def workload_per_competences(tab_competence):
-    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\workload_by_competencies.csv', sep=";")
+def workload_per_competences(set, tab_competence):
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set '+str(set)+'\workload_by_competencies.csv', sep=";")
     workload = np.zeros(len(tab_competence))
     for i in range(len(tab_competence)):
         for j in range(data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].size):
             workload[i] = workload[i] + data[data['COMPETENCY']==tab_competence[i]]['HOURLY WORKLOAD'].values[0]
     return workload
 
-def min_op_max_op(tab_competence):
-    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set 1\Interval_duplication_competency.csv', sep=';')
+def min_op_max_op(set, tab_competence):
+    data = pd.read_csv('Données Projet ST - EMSE Projet Etudiant\set '+str(set)+'\Interval_duplication_competency.csv', sep=';')
     list_min_op = np.zeros(len(tab_competence))
     list_max_op = np.zeros(len(tab_competence))
     for i in range(len(tab_competence)):
@@ -83,14 +83,14 @@ def ratio_skills():
         ratio.append(data.values[0][i])
     return ratio
 
-def create_file_from(type, name, nb, minVers, maxVers, time):
+def create_file_from(set, type, name, nb, minVers, maxVers, time):
     if(type == 'zone'):
         file='ITS_PE.dat'
         with open(file, 'w') as filetowrite:
 
-            workload = workload_per_competences(competences_from_zone(name))
-            association_rule = creation_association_rule(competences_from_zone(name))
-            liste_min_op, liste_max_op = min_op_max_op(competences_from_zone(name))
+            workload = workload_per_competences(set, competences_from_zone(set, name))
+            association_rule = creation_association_rule(set, competences_from_zone(set, name))
+            liste_min_op, liste_max_op = min_op_max_op(set, competences_from_zone(set, name))
             ratio = ratio_skills()
 
             filetowrite.write('Operator = {')
@@ -149,9 +149,9 @@ def create_file_from(type, name, nb, minVers, maxVers, time):
         file='ITS_PE.dat'
         with open(file, 'w') as filetowrite:
 
-            workload = workload_per_competences(competences_from_area(name))
-            association_rule = creation_association_rule(competences_from_area(name))
-            liste_min_op, liste_max_op = min_op_max_op(competences_from_area(name))
+            workload = workload_per_competences(set, competences_from_area(set, name))
+            association_rule = creation_association_rule(set, competences_from_area(set, name))
+            liste_min_op, liste_max_op = min_op_max_op(set, competences_from_area(set, name))
             ratio = ratio_skills()
 
             filetowrite.write('Operator = {')
@@ -217,7 +217,7 @@ def create_file_from(type, name, nb, minVers, maxVers, time):
 
 
 
-create_file_from('zone', 'ZONE 1', 10, 1, 10, 0)
+create_file_from(2, 'zone', 'ZONE 3', 10, 1, 10, 0)
 #create_file_from('zone', 'ZONE 7')
 
 
