@@ -217,7 +217,7 @@ def create_file_from(set, type, name, nb, minVers, maxVers, time):
 
 
 
-create_file_from(1, 'zone', 'ZONE 7', 10, 1, 10, 0)
+create_file_from(1, 'zone', 'ZONE 3', 16, 1, 10, 0)
 #create_file_from('zone', 'ZONE 7')
 
 

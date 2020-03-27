@@ -178,9 +178,17 @@ execute {
 	ofile.write("%");
 	ofile.writeln("\n");
 
-	var TotalOperator = Operator.size;
+	var TotalOperator = 0;
+	for(var i in Operator){
+	  if(Team[i]==1)
+	  {
+	  		TotalOperator = TotalOperator + hourlyAvailability[i];
+	  }		
+	}
 	ofile.writeln("Unoccupied Operators: ");
-	var UnoccupiedOperators = 100-(totalTeam*100)/TotalOperator;
+	writeln("Total Operator: ", TotalOperator);
+	writeln("Total availability: ", TotalWorkingTime);
+	var UnoccupiedOperators = 100-(TotalWorkingTime*100)/TotalOperator;
 	ofile.write(UnoccupiedOperators);
 	ofile.write("%");
 	ofile.writeln("\n");
@@ -194,7 +202,7 @@ execute {
 	var ofile = new IloOplOutputFile("results.txt");
 
 	ofile.writeln("Xjk: ");
-	for(var i in Competence){
+	for(var i in Operator){
 		for (var j in Competence) {
 			ofile.write(OperatorCompetenceMatrix[i][j]+"\t");
 			}
