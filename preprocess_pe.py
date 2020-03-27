@@ -83,7 +83,6 @@ def create_file_from(set, type, name, nb, minVers, maxVers, time):
             liste_min_op, liste_max_op = min_op_max_op(set, competences_from_zone(set, name))
             ratio = ratio_skills()
 
-            print(workload)
             filetowrite.write('Operator = {')
             for i in range(0, nb-1):
                 filetowrite.write(str(i)+',')
@@ -208,7 +207,7 @@ def create_file_from(set, type, name, nb, minVers, maxVers, time):
 
 
 
-create_file_from(1, 'zone', 'ZONE 7', 16, 1, 10, 0)
+create_file_from(1, 'zone', 'ZONE 1', 10, 1, 10, 0)
 #create_file_from('zone', 'ZONE 7')
 
 

@@ -2,8 +2,8 @@ Nb Op:
 6
 
 Unanswered Demand: 
--2.155450875%
+0%
 
 Unoccupied Operators: 
-31.856011635%
+29.646538102%
 

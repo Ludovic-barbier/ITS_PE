@@ -5,6 +5,6 @@
     <setting name="timelimit" value="20.0"/>
   </category>
   <category name="cplex">
-    <setting name="tilim" value="300.0"/>
+    <setting name="tilim" value="120.0"/>
   </category>
 </settings>
